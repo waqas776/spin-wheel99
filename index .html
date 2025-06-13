@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spin & Win</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 36px;
+      color: #ffdd00;
+      text-shadow: 2px 2px #000;
+    }
+
+    .wheel-container {
+      position: relative;
+      margin: 30px auto;
+      width: 320px;
+      height: 320px;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid #fff;
+      box-shadow: 0 0 40px rgba(255,255,255,0.2);
+      background: conic-gradient(
+        #8e44ad 0deg 45deg,
+        #1abc9c 45deg 90deg,
+        #f39c12 90deg 135deg,
+        #e74c3c 135deg 180deg,
+        #2ecc71 180deg 225deg,
+        #3498db 225deg 270deg,
+        #e67e22 270deg 315deg,
+        #9b59b6 315deg 360deg
+      );
+      transition: transform 5s ease-out;
+      transform: rotate(0deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .segment-text {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center;
+      font-weight: bold;
+      color: #fff;
+      font-size: 16px;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .pointer {
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 35px solid #ff4136;
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    .spin-btn {
+      padding: 15px 45px;
+      background: #00f260;
+      background: linear-gradient(to right, #0575e6, #00f260);
+      color: white;
+      font-size: 20px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 20px;
+      box-shadow: 0 0 15px #00f260;
+      transition: 0.3s;
+    }
+
+    .spin-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #00f260;
+    }
+
+    .overlay, .whatsapp-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 999;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .overlay button, .whatsapp-overlay a, #claimBtn {
+      margin-top: 20px;
+      padding: 14px 24px;
+      font-size: 18px;
+      background: #ffdd00;
+      color: black;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .overlay button:hover, .whatsapp-overlay a:hover, #claimBtn:hover {
+      background: #fff200;
+    }
+
+    input {
+      padding: 14px;
+      width: 85%;
+      max-width: 320px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 10px;
+      font-size: 17px;
+      outline: none;
+    }
+
+    #claimBtn[disabled] {
+      background: #999;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎁 Spin & Win</h1>
+
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div id="wheel" class="wheel">
+      <div class="segment-text" style="transform: rotate(22.5deg) translateY(-120px);">RS2000</div>
+      <div class="segment-text" style="transform: rotate(67.5deg) translateY(-120px);">RS4000</div>
+      <div class="segment-text" style="transform: rotate(112.5deg) translateY(-120px);">RS6000</div>
+      <div class="segment-text" style="transform: rotate(157.5deg) translateY(-120px);">RS8000</div>
+      <div class="segment-text" style="transform: rotate(202.5deg) translateY(-120px);">RS10000</div>
+      <div class="segment-text" style="transform: rotate(247.5deg) translateY(-120px);">RS12000</div>
+      <div class="segment-text" style="transform: rotate(292.5deg) translateY(-120px);">RS14000</div>
+      <div class="segment-text" style="transform: rotate(337.5deg) translateY(-120px);">RS16000</div>
+    </div>
+  </div>
+
+  <button class="spin-btn" onclick="spin()">🎯 SPIN NOW</button>
+
+  <div id="overlay" class="overlay">
+    <div id="prizeText">🎉 You won RS5000! 🎉</div>
+    <button onclick="showForm()">OK</button>
+  </div>
+
+  <div id="form" class="overlay">
+    <div>
+      <p>Enter your name and number:</p>
+      <input type="text" id="name" placeholder="Your Name" /><br>
+      <input type="text" id="number" placeholder="Your Number" /><br>
+      <button onclick="showWhatsApp()">Next</button>
+    </div>
+  </div>
+
+  <div id="whatsapp" class="whatsapp-overlay">
+    <div id="whatsappMsg">Share your prize on WhatsApp!</div>
+    <a id="waLink" href="#" onclick="return goToWhatsApp()">📲 Share on WhatsApp</a>
+    <button id="claimBtn" onclick="alert('🎉 Prize Claimed!')" disabled>Invite 5 friends to Claim</button>
+  </div>
+
+  <audio id="winAudio" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
+
+  <script>
+    const wheel = document.getElementById('wheel');
+    const prizes = ['RS2000', 'RS4000', 'RS6000', 'RS8000', 'RS10000', 'RS12000', 'RS14000', 'RS16000'];
+    const segmentAngle = 360 / prizes.length;
+    let spinning = false;
+    let currentPrize = '';
+    let shareCount = 0;
+
+    function spin() {
+      if (spinning) return;
+      spinning = true;
+
+      const picked = Math.floor(Math.random() * prizes.length);
+      currentPrize = prizes[picked];
+
+      const fullRotations = 5;
+      const stopAngle = (360 - (picked * segmentAngle + segmentAngle / 2)) % 360;
+      const totalRotation = fullRotations * 360 + stopAngle;
+
+      wheel.style.transition = 'transform 5s ease-out';
+      wheel.style.transform = `rotate(${totalRotation}deg)`;
+
+      setTimeout(() => {
+        document.getElementById('winAudio').play();
+        document.getElementById('prizeText').textContent = `🎉 You won ${currentPrize}! 🎉`;
+        document.getElementById('overlay').style.display = 'flex';
+        spinning = false;
+      }, 5200);
+    }
+
+    function showForm() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('form').style.display = 'flex';
+    }
+
+    function showWhatsApp() {
+      const name = document.getElementById('name').value.trim();
+      const number = document.getElementById('number').value.trim();
+      if (!name || !number) {
+        alert("Please enter your name and number.");
+        return;
+      }
+
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('whatsapp').style.display = 'flex';
+    }
+
+    function goToWhatsApp() {
+      shareCount++;
+      const name = document.getElementById('name').value.trim();
+      const msg = `🎉 I won ${currentPrize} on Spin & Win!\nName: ${name}\nTry your luck: https://yourlink.com`;
+      const waUrl = `whatsapp://send?text=${encodeURIComponent(msg)}`;
+      window.location.href = waUrl;
+
+      if (shareCount >= 5) {
+        document.getElementById('claimBtn').disabled = false;
+        document.getElementById('claimBtn').textContent = '🎉 Claim Now';
+        document.getElementById('whatsappMsg').textContent = '✅ You invited 5 friends! Now claim your prize.';
+      } else {
+        document.getElementById('claimBtn').textContent = `Invite ${5 - shareCount} more to Claim`;
+      }
+
+      return false;
+    }
+  </script>
+
+  <!-- Optional Ad Code -->
+  <script type="text/javascript">
+    atOptions = {
+      'key' : '3dfcd030c4ef62d249586401a554ca3a',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
+  </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/3dfcd030c4ef62d249586401a554ca3a/invoke.js"></script>
+</body>
+</html>
